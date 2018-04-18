@@ -209,16 +209,7 @@ macro(build_py ver)
     else()
         execute_process ( COMMAND ${PYTHON${ver}_EXECUTABLE} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())" OUTPUT_VARIABLE PY_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-        set(TEST_CMD "try:
-    import setuptools
-    print(1)
-except ImportError:
-    pass")
-
-        execute_process ( COMMAND ${PYTHON${ver}_EXECUTABLE} -c ${TEST_CMD} OUTPUT_VARIABLE PY_HAVE_SETUPTOOLS OUTPUT_STRIP_TRAILING_WHITESPACE)
-        if(PY_HAVE_SETUPTOOLS)
-            set(SETUP_OPTS ${SETUP_OPTS} --no-compile --single-version-externally-managed --record=rekord.txt)
-        endif()
+        set(SETUP_OPTS ${SETUP_OPTS} --no-compile --single-version-externally-managed --record=rekord.txt)
 
         string( LENGTH "$ENV{DESTDIR}" DESTDIRLEN )
         if ( ${DESTDIRLEN} GREATER 0 )
