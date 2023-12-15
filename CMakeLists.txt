@@ -89,6 +89,7 @@ endif()
 
 if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL )
     install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${OUT_DIR_NAME}/${PROJECT_NAME}/ DESTINATION ${INSTALL_LIB_DIR}/${PROJECT_NAME}/)
+	install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${OUT_DIR_NAME}/pkg_resources/ DESTINATION ${INSTALL_LIB_DIR}/pkg_resources/)
 endif()
 
 # Archiving ====================================================================
