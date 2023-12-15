@@ -88,8 +88,12 @@ if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${OUT_DIR_NAME})
 endif()
 
 if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL )
-    install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${OUT_DIR_NAME}/${PROJECT_NAME}/ DESTINATION ${INSTALL_LIB_DIR}/${PROJECT_NAME}/)
-	install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${OUT_DIR_NAME}/pkg_resources/ DESTINATION ${INSTALL_LIB_DIR}/pkg_resources/)
+    install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${OUT_DIR_NAME}/${PROJECT_NAME}/ 
+		    DESTINATION ${INSTALL_LIB_DIR}/${PROJECT_NAME}/ 
+			PATTERN "*/tests" EXCLUDE)
+	install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${OUT_DIR_NAME}/pkg_resources/ 
+	        DESTINATION ${INSTALL_LIB_DIR}/pkg_resources/ 
+			PATTERN "*/tests" EXCLUDE)
 endif()
 
 # Archiving ====================================================================
