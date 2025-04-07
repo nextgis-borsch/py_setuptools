@@ -1,6 +1,4 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 import sys
 import os
 import json
@@ -8,25 +6,33 @@ import json
 version = '0.0.0'
 download_url = ''
 
+def get_latest_version(data):
+    for version, files in reversed(data['releases'].items()):
+        if files:
+            file = files[-1]
+            if file['url'].endswith(('tar.gz', 'zip')):
+                return version, file['url'], file['upload_time'].replace('T', ' ')
+    return None, None, None
+
 with open(sys.argv[1]) as data_file:
     data = json.load(data_file)
-
-    version = data['info']['version']
     name = data['info']['name']
-    for i in data['releases'][version]:
-        if i['url'].endswith('tar.gz') or i['url'].endswith('zip'):
-            download_url = i['url']
-            date = i['upload_time'].replace('T', ' ')
-            break
+    version_max = sys.argv[3] if len(sys.argv) > 3 else None
 
-#    download_url = data['info']['download_url']
-#    date = data['releases'][version][0]['upload_time'].replace('T', ' ')
+    if version_max:
+        for version, files in reversed(data['releases'].items()):
+            if version <= version_max and files:
+                file = files[-1]
+                if file['url'].endswith(('tar.gz', 'zip')):
+                    download_url = file['url']
+                    date = file['upload_time'].replace('T', ' ')
+                    break
+    else:
+        version, download_url, date = get_latest_version(data)
 
     version_file_name = os.path.join(os.path.dirname(sys.argv[1]), 'version.str')
-    version_file = open(version_file_name, 'w')
-    norm_version = version.replace('rc', '.')
-    pack_name = "{}-{}-{}".format(name, norm_version, sys.argv[2])
-    version_file.write("{}\n{}\n{}".format(norm_version, date, pack_name))
-    version_file.close()
+    with open(version_file_name, 'w') as version_file:
+        pack_name = f"{name}-{version}-{sys.argv[2]}"
+        version_file.write(f"{version}\n{date}\n{pack_name}")
 
-print(download_url + ';' + norm_version + ';' + version + ';' + pack_name)
+print(f"{download_url};{version};{pack_name}")
